@@ -5,7 +5,7 @@ import https from 'https'; // 引入 https 模組，用於自定義 Agent
 
 const app = express();
 const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
-const TARGET_API_URL = 'https://openrouter.ai/api'; // 設定您的目標 API 基地址
+const TARGET_API_URL = 'https://generativelanguage.googleapis.com'; // 設定您的目標 API 基地址
 
 // 啟用 Express 的 JSON 體解析器，這樣才能正確解析傳入的 JSON 請求體
 // 這裡也包括了 urlencoded 以確保能處理不同的內容類型
@@ -23,7 +23,6 @@ app.use(express.raw()); // 用於處理原始二進制請求體 (例如，應用
 // 處理所有 HTTP 方法和所有路徑的請求
 app.all('*', async (req, res) => {
   const originalUrl = req.url; // 取得原始請求的路徑和查詢參數
-  // 組合目標 API 的完整 URL，例如：https://openrouter.ai/api/v1/chat/completions
   const targetUrl = `${TARGET_API_URL}${originalUrl}`;
 
   console.log(`代理請求: ${req.method} ${originalUrl} -> ${targetUrl}`);
