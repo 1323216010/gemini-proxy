@@ -4,6 +4,8 @@ import httpx
 app = FastAPI()
 
 TARGET_API_URL = "https://openrouter.ai/api"  # 請替換為您實際的目標 API URL
+
+
 @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH", "TRACE"])
 async def proxy_api(path: str, request: Request):
     """
