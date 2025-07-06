@@ -17,6 +17,8 @@
 
 你可以使用[claw cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S)來運行
 
+You can see [claw cloud setting](https://github.com/spectre-pro/gemini-vpn?tab=readme-ov-file#claw-cloud-setting)
+
 您可以從 Docker Hub 拉取預建的 Docker 映像：
 
 ```bash
