@@ -16,6 +16,8 @@ This project provides a simple Node.js proxy server for the Google Generative La
 
 ### Using Docker (Recommended)
 
+You can use the [claw cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S) to run
+
 You can pull the pre-built Docker image from Docker Hub:
 
 ```bash
