@@ -25,7 +25,7 @@ docker pull spectrpro/gemini-vpn
 After pulling, you can run the proxy server:
 
 ```bash
-docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
 ```
 
 The proxy will be accessible at `http://localhost:34562`.
@@ -45,7 +45,7 @@ If you prefer to build the Docker image yourself:
     ```
 3.  **Run the Docker container:**
     ```bash
-    docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+    docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
     ```
 
 ### Running Locally (Node.js)

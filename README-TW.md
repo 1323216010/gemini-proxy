@@ -24,7 +24,7 @@ docker pull spectrpro/gemini-vpn
 拉取後，您可以運行代理伺服器：
 
 ```bash
-docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
 ```
 
 代理伺服器將在 `http://localhost:34562` 上可訪問。
@@ -44,7 +44,7 @@ docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
     ```
 3.  **運行 Docker 容器：**
     ```bash
-    docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+    docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
     ```
 
 ### 本地運行 (Node.js)
