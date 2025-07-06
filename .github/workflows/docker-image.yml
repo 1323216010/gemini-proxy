@@ -29,7 +29,6 @@ jobs:
 
         echo "FULL_LOCAL_TAG=$FULL_LOCAL_TAG" >> $GITHUB_ENV
         echo "TIMESTAMP_TAG=$TIMESTAMP_TAG" >> $GITHUB_ENV
-        echo "LOCAL_IMAGE_NAME=$LOCAL_IMAGE_NAME" >> $GITHUB_ENV
 
         docker build . --file Dockerfile --tag $FULL_LOCAL_TAG
 
