@@ -1,49 +1,117 @@
-# Gemini VPN
+# Gemini VPN Proxy
+[繁體中文](README-TW)
 
-[chinese-TW](README-TW.md)
+This project provides a simple Node.js proxy server for the Google Generative Language API (Gemini API). It allows you to route your API requests through a local proxy, which can be useful for various purposes such as debugging, logging, or bypassing certain network restrictions.
 
-## Description
-Gemini VPN is a Node.js application that likely provides VPN-related functionalities. It utilizes `express` for web server capabilities and `node-fetch` for making network requests.
+## Features
 
-## Installation
+*   **API Proxy:** Forwards requests to `https://generativelanguage.googleapis.com`.
+*   **HTTP Method Support:** Handles all standard HTTP methods (GET, POST, PUT, DELETE, etc.).
+*   **Body Parsing:** Supports JSON, URL-encoded, plain text, and raw binary request bodies.
+*   **Header Forwarding:** Copies most original request headers to the target API, with necessary adjustments for proxying (e.g., `Host` header).
+*   **Streamed Responses:** Efficiently streams responses from the target API back to the client.
+*   **Docker Support:** Easily deployable using Docker.
 
-To set up the project locally, follow these steps:
+## Getting Started
+
+### Using Docker (Recommended)
+
+You can pull the pre-built Docker image from Docker Hub:
+
+```bash
+docker pull spectrpro/gemini-vpn
+```
+
+After pulling, you can run the proxy server:
+
+```bash
+docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+```
+
+The proxy will be accessible at `http://localhost:34562`.
+
+### Building and Running with Docker
+
+If you prefer to build the Docker image yourself:
 
 1.  **Clone the repository:**
     ```bash
     git clone https://github.com/spectre-pro/gemini-vpn.git
-    ```
-2.  **Navigate to the project directory:**
-    ```bash
     cd gemini-vpn
     ```
-3.  **Install dependencies:**
+2.  **Build the Docker image:**
+    ```bash
+    docker build -t spectrpro/gemini-vpn .
+    ```
+3.  **Run the Docker container:**
+    ```bash
+    docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+    ```
+
+### Running Locally (Node.js)
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/spectre-pro/gemini-vpn.git
+    cd gemini-vpn
+    ```
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
+3.  **Start the server:**
+    ```bash
+    node src/main.js
+    ```
+    The server will run on `http://localhost:34562` by default.
 
-## Usage
+## Configuration
 
-To run the application, execute the following command from the project root:
+The proxy server can be configured using environment variables:
 
-```bash
-node src/main.js
+*   `PORT`: The port on which the proxy server will listen. Defaults to `34562`.
+    *   Example: `PORT=8080 node src/main.js`
+*   `TARGET_API_URL`: The base URL of the target API. Defaults to `https://generativelanguage.googleapis.com`.
+    *   Example: `TARGET_API_URL=https://api.example.com node src/main.js`
+
+## Usage Example
+
+Once the proxy is running, you can direct your Gemini API requests to `http://localhost:34562` instead of `https://generativelanguage.googleapis.com`.
+
+For example, if you would normally make a request like this:
+
+```
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
+Content-Type: application/json
+{
+  "contents": [
+    {
+      "parts": [
+        {"text": "Hello, Gemini!"}
+      ]
+    }
+  ]
+}
 ```
 
-## Docker Usage
+You would now make it to your proxy:
 
-You can also run this application using Docker.
+```
+POST http://localhost:34562/v1beta/models/gemini-pro:generateContent
+Content-Type: application/json
+{
+  "contents": [
+    {
+      "parts": [
+        {"text": "Hello, Gemini!"}
+      ]
+    }
+  ]
+}
+```
 
-1.  **Build the Docker image:**
-    ```bash
-    docker build -t gemini-vpn .
-    ```
-2.  **Run the Docker container:**
-    ```bash
-    docker run -p 3000:3000 gemini-vpn
-    ```
-    (Assuming the application runs on port 3000. Adjust if necessary.)
+The proxy will forward this request to `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent` and return the response.
 
 ## License
 
-This project is licensed under the ISC License. See the `LICENSE` file (if present) for more details.
+This project is licensed under the [LICENSE](LICENSE) file.

@@ -1,47 +1,116 @@
-# Gemini VPN
+# Gemini VPN 代理伺服器
 
-## 描述
-Gemini VPN 是一個 Node.js 應用程式，可能提供 VPN 相關功能。它利用 `express` 提供網頁伺服器功能，並使用 `node-fetch` 進行網路請求。
+此專案提供一個簡單的 Node.js 代理伺服器，用於 Google Generative Language API (Gemini API)。它允許您透過本地代理路由您的 API 請求，這對於偵錯、日誌記錄或繞過某些網路限制等各種目的都非常有用。
 
-## 安裝
+## 功能
 
-要將專案設定到本地，請按照以下步驟操作：
+*   **API 代理:** 將請求轉發到 `https://generativelanguage.googleapis.com`。
+*   **HTTP 方法支援:** 處理所有標準 HTTP 方法 (GET, POST, PUT, DELETE 等)。
+*   **請求體解析:** 支援 JSON、URL 編碼、純文字和原始二進位請求體。
+*   **標頭轉發:** 將大多數原始請求標頭複製到目標 API，並進行必要的代理調整 (例如，`Host` 標頭)。
+*   **串流回應:** 有效率地將目標 API 的回應串流回客戶端。
+*   **Docker 支援:** 易於使用 Docker 部署。
 
-1.  **複製儲存庫：**
+## 快速開始
+
+### 使用 Docker (推薦)
+
+您可以從 Docker Hub 拉取預建的 Docker 映像：
+
+```bash
+docker pull spectrpro/gemini-vpn
+```
+
+拉取後，您可以運行代理伺服器：
+
+```bash
+docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+```
+
+代理伺服器將在 `http://localhost:34562` 上可訪問。
+
+### 使用 Docker 建置和運行
+
+如果您更喜歡自己建置 Docker 映像：
+
+1.  **克隆儲存庫：**
     ```bash
     git clone https://github.com/spectre-pro/gemini-vpn.git
-    ```
-2.  **導航到專案目錄：**
-    ```bash
     cd gemini-vpn
     ```
-3.  **安裝依賴項：**
+2.  **建置 Docker 映像：**
+    ```bash
+    docker build -t spectrpro/gemini-vpn .
+    ```
+3.  **運行 Docker 容器：**
+    ```bash
+    docker run -d -p 34562:34562 --name gemini-proxy spectrpro/gemini-vpn
+    ```
+
+### 本地運行 (Node.js)
+
+1.  **克隆儲存庫：**
+    ```bash
+    git clone https://github.com/spectre-pro/gemini-vpn.git
+    cd gemini-vpn
+    ```
+2.  **安裝依賴項：**
     ```bash
     npm install
     ```
+3.  **啟動伺服器：**
+    ```bash
+    node src/main.js
+    ```
+    伺服器將預設在 `http://localhost:34562` 上運行。
 
-## 使用方式
+## 配置
 
-要運行應用程式，請從專案根目錄執行以下命令：
+代理伺服器可以使用環境變數進行配置：
 
-```bash
-node src/main.js
+*   `PORT`: 代理伺服器將監聽的埠號。預設為 `34562`。
+    *   範例：`PORT=8080 node src/main.js`
+*   `TARGET_API_URL`: 目標 API 的基本 URL。預設為 `https://generativelanguage.googleapis.com`。
+    *   範例：`TARGET_API_URL=https://api.example.com node src/main.js`
+
+## 使用範例
+
+代理伺服器運行後，您可以將 Gemini API 請求導向 `http://localhost:34562`，而不是 `https://generativelanguage.googleapis.com`。
+
+例如，如果您通常會發出這樣的請求：
+
+```
+POST https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
+Content-Type: application/json
+{
+  "contents": [
+    {
+      "parts": [
+        {"text": "Hello, Gemini!"}
+      ]
+    }
+  ]
+}
 ```
 
-## Docker 使用方式
+您現在將其發送到您的代理：
 
-您也可以使用 Docker 運行此應用程式。
+```
+POST http://localhost:34562/v1beta/models/gemini-pro:generateContent
+Content-Type: application/json
+{
+  "contents": [
+    {
+      "parts": [
+        {"text": "Hello, Gemini!"}
+      ]
+    }
+  ]
+}
+```
 
-1.  **建置 Docker 映像：**
-    ```bash
-    docker build -t gemini-vpn .
-    ```
-2.  **運行 Docker 容器：**
-    ```bash
-    docker run -p 3000:3000 gemini-vpn
-    ```
-    （假設應用程式在端口 3000 上運行。如有必要請調整。）
+代理伺服器會將此請求轉發到 `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent` 並返回回應。
 
 ## 許可證
 
-本專案採用 ISC 許可證。有關更多詳細資訊，請參閱 `LICENSE` 文件（如果存在）。
+此專案根據 [LICENSE](LICENSE) 文件獲得許可。
