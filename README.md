@@ -18,6 +18,8 @@ This project provides a simple Node.js proxy server for the Google Generative La
 
 You can use the [claw cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S) to run
 
+You can see [claw cloud setting](https://github.com/spectre-pro/gemini-vpn/edit/main/README.md#claw-cloud-setting)
+
 You can pull the pre-built Docker image from Docker Hub:
 
 ```bash
