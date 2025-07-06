@@ -1,3 +1,4 @@
+# .github/workflows/docker-image.yml
 name: Docker Image CI
 
 on:
@@ -13,15 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
+      packages: write # 需要寫入 GHCR
+      id-token: write # 如果您使用 OIDC 登入，可能需要此權限，但對於ghcr.io和docker.io的username/password登入默認不需要
 
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: |
-        LOCAL_BASE_IMAGE_NAME="my-image-name"
+        LOCAL_IMAGE_NAME="my-image-name"
         TIMESTAMP_TAG=$(date +%s)
-        FULL_LOCAL_TAG="${LOCAL_BASE_IMAGE_NAME}:${TIMESTAMP_TAG}"
+        FULL_LOCAL_TAG="${LOCAL_IMAGE_NAME}:${TIMESTAMP_TAG}"
 
         echo "Built full local tag: $FULL_LOCAL_TAG"
         echo "Extracted timestamp tag: $TIMESTAMP_TAG"
@@ -30,21 +32,38 @@ jobs:
         echo "TIMESTAMP_TAG=$TIMESTAMP_TAG" >> $GITHUB_ENV
 
         docker build . --file Dockerfile --tag $FULL_LOCAL_TAG
+
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
-    - name: Tag the image for GHCR
+
+    - name: Tag and Push to GitHub Container Registry
       run: |
         REPOSITORY=${{ github.repository }}
-        GHCR_TAG="ghcr.io/$REPOSITORY:${{ env.TIMESTAMP_TAG }}"
-        echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $GHCR_TAG"
-        docker tag ${{ env.FULL_LOCAL_TAG }} $GHCR_TAG
-    - name: Push the Docker image
+        GHCR_FULL_TAG="ghcr.io/$REPOSITORY:${{ env.TIMESTAMP_TAG }}"
+        
+        echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $GHCR_FULL_TAG"
+        docker tag ${{ env.FULL_LOCAL_TAG }} $GHCR_FULL_TAG
+        
+        echo "Pushing $GHCR_FULL_TAG to GitHub Container Registry"
+        docker push $GHCR_FULL_TAG
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Tag and Push to Docker Hub
       run: |
-        REPOSITORY=${{ github.repository }}
-        GHCR_TAG="ghcr.io/$REPOSITORY:${{ env.TIMESTAMP_TAG }}"
-        echo "Pushing $GHCR_TAG"
-        docker push $GHCR_TAG
+        DOCKER_HUB_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.LOCAL_IMAGE_NAME || 'my-image-name' }}"
+        DOCKER_HUB_FULL_TAG="${DOCKER_HUB_IMAGE_NAME}:${{ env.TIMESTAMP_TAG }}"
+
+        echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $DOCKER_HUB_FULL_TAG"
+        docker tag ${{ env.FULL_LOCAL_TAG }} $DOCKER_HUB_FULL_TAG
+
+        echo "Pushing $DOCKER_HUB_FULL_TAG to Docker Hub"
+        docker push $DOCKER_HUB_FULL_TAG
