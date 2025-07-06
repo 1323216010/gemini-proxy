@@ -114,6 +114,11 @@ Content-Type: application/json
 
 The proxy will forward this request to `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent` and return the response.
 
+### Claw cloud setting
+
+![image](https://github.com/user-attachments/assets/c1dd1a51-18da-47a6-870a-0f3ecc615055)
+
+
 ## License
 
 This project is licensed under the [LICENSE](LICENSE) file.
