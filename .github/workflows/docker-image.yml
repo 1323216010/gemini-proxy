@@ -1,4 +1,3 @@
-# .github/workflows/docker-image.yml
 name: Docker Image CI
 
 on:
@@ -14,8 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write # 需要寫入 GHCR
-      id-token: write # 如果您使用 OIDC 登入，可能需要此權限，但對於ghcr.io和docker.io的username/password登入默認不需要
+      packages: write
+      id-token: write
 
     steps:
     - uses: actions/checkout@v4
@@ -59,7 +58,7 @@ jobs:
 
     - name: Tag and Push to Docker Hub
       run: |
-        DOCKER_HUB_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.LOCAL_IMAGE_NAME || 'my-image-name' }}"
+        DOCKER_HUB_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.LOCAL_IMAGE_NAME }}"
         DOCKER_HUB_FULL_TAG="${DOCKER_HUB_IMAGE_NAME}:${{ env.TIMESTAMP_TAG }}"
 
         echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $DOCKER_HUB_FULL_TAG"
