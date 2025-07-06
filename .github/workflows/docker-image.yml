@@ -59,7 +59,7 @@ jobs:
 
     - name: Tag and Push to Docker Hub
       run: |
-        DOCKER_HUB_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/${{ env.LOCAL_IMAGE_NAME }}"
+        DOCKER_HUB_IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/gemini-vpn"
         DOCKER_HUB_FULL_TAG="${DOCKER_HUB_IMAGE_NAME}:${{ env.TIMESTAMP_TAG }}"
 
         echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $DOCKER_HUB_FULL_TAG"
