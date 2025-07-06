@@ -15,6 +15,8 @@
 
 ### 使用 Docker (推薦)
 
+你可以使用[claw cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S)來運行
+
 您可以從 Docker Hub 拉取預建的 Docker 映像：
 
 ```bash
