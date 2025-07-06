@@ -1,7 +1,5 @@
 // src/main.js
 import express from 'express';
-import fetch from 'node-fetch'; // 對於 Node.js 18 以下版本，或是如果您更喜歡 node-fetch
-import https from 'https'; // 引入 https 模組，用於自定義 Agent
 
 const app = express();
 const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
@@ -13,12 +11,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text()); // 用於處理純文本請求體
 app.use(express.raw()); // 用於處理原始二進制請求體 (例如，應用程式/八位位元組流)
-
-// 如果您仍然需要忽略 SSL 憑證驗證，請取消註釋以下程式碼
-// 警告：這會讓您的應用程式在生產環境中不安全
-// const agent = new https.Agent({
-//   rejectUnauthorized: false // <--- 設置為 false 以忽略憑證驗證
-// });
 
 // 處理所有 HTTP 方法和所有路徑的請求
 app.all('*', async (req, res) => {

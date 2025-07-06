@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/spectre-pro/gemini-vpn#readme",
   "dependencies": {
-    "express": "^4.21.2",
-    "node-fetch": "^3.3.2"
+    "express": "^4.21.2"
   }
 }
