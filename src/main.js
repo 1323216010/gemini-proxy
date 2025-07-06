@@ -1,9 +1,10 @@
 // src/main.js
 import express from 'express';
+import { Readable } from 'stream'; // 新增：從 'stream' 模組導入 Readable
 
 const app = express();
 const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
-const TARGET_API_URL = 'https://generativelanguage.googleapis.com'; // 設定您的目標 API 基地址
+const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
 
 // 啟用 Express 的 JSON 體解析器，這樣才能正確解析傳入的 JSON 請求體
 // 這裡也包括了 urlencoded 以確保能處理不同的內容類型
@@ -101,7 +102,12 @@ app.all('*', async (req, res) => {
     }
 
     // 將目標 API 的回應流式傳輸回客戶端
-    apiResponse.body.pipe(res);
+    if (apiResponse.body) {
+      Readable.fromWeb(apiResponse.body).pipe(res);
+    } else {
+      // 如果沒有回應主體（例如，HEAD 請求或 204 No Content），則直接結束回應
+      res.end();
+    }
 
   } catch (error) {
     console.error(`代理請求時出錯: ${req.method} ${originalUrl} -> ${targetUrl}`, error);
