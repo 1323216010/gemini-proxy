@@ -1,5 +1,5 @@
 # Gemini VPN Proxy
-[繁體中文](README-TW)
+[繁體中文](README-TW.md)
 
 This project provides a simple Node.js proxy server for the Google Generative Language API (Gemini API). It allows you to route your API requests through a local proxy, which can be useful for various purposes such as debugging, logging, or bypassing certain network restrictions.
 
