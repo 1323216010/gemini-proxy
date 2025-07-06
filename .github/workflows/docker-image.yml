@@ -17,10 +17,24 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: |
-        IMAGE_TAG="my-image-name:$(date +%s)"
-        echo "Built image tag: $IMAGE_TAG"
-        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-        docker build . --file Dockerfile --tag $IMAGE_TAG
+        # 定義本地映像基礎名稱，您可以根據需要修改
+        LOCAL_BASE_IMAGE_NAME="my-image-name"
+        # 獲取時間戳作為標籤部分
+        TIMESTAMP_TAG=$(date +%s)
+        # 完整的本地映像標籤 (例如：my-image-name:1678886400)
+        FULL_LOCAL_TAG="${LOCAL_BASE_IMAGE_NAME}:${TIMESTAMP_TAG}"
+
+        echo "Built full local tag: $FULL_LOCAL_TAG"
+        echo "Extracted timestamp tag: $TIMESTAMP_TAG"
+
+        # 將完整的本地標籤和時間戳標籤儲存到 GITHUB_ENV，供後續步驟使用
+        # FULL_LOCAL_TAG 會是 "my-image-name:時間戳"
+        # TIMESTAMP_TAG 會是 "時間戳"
+        echo "FULL_LOCAL_TAG=$FULL_LOCAL_TAG" >> $GITHUB_ENV
+        echo "TIMESTAMP_TAG=$TIMESTAMP_TAG" >> $GITHUB_ENV
+
+        # 建置 Docker 映像
+        docker build . --file Dockerfile --tag $FULL_LOCAL_TAG
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
@@ -30,9 +44,18 @@ jobs:
     - name: Tag the image for GHCR
       run: |
         REPOSITORY=${{ github.repository }}
-        echo "Pushing to ghcr.io/$REPOSITORY:${{env.IMAGE_TAG#*:}}"
-        docker tag ${{env.IMAGE_TAG}} ghcr.io/$REPOSITORY:${{env.IMAGE_TAG#*:}}
+        # GHCR 映像的完整標籤會是 ghcr.io/<你的GitHub repo路徑>:<時間戳標籤>
+        # 使用儲存的環境變數 TIMESTAMP_TAG 來組合標籤
+        GHCR_TAG="ghcr.io/$REPOSITORY:${{ env.TIMESTAMP_TAG }}"
+        echo "Tagging ${{ env.FULL_LOCAL_TAG }} as $GHCR_TAG"
+        # 使用 FULL_LOCAL_TAG 作為源，GHCR_TAG 作為目標
+        docker tag ${{ env.FULL_LOCAL_TAG }} $GHCR_TAG
     - name: Push the Docker image
       run: |
         REPOSITORY=${{ github.repository }}
-        docker push ghcr.io/$REPOSITORY:${{env.IMAGE_TAG#*:}}
+        # GHCR 映像的完整標籤會是 ghcr.io/<你的GitHub repo路徑>:<時間戳標籤>
+        # 使用儲存的環境變數 TIMESTAMP_TAG 來組合標籤
+        GHCR_TAG="ghcr.io/$REPOSITORY:${{ env.TIMESTAMP_TAG }}"
+        echo "Pushing $GHCR_TAG"
+        # 直接推送 GHCR_TAG
+        docker push $GHCR_TAG
