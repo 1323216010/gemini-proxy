@@ -127,4 +127,10 @@ This project is licensed under the [LICENSE](LICENSE) file.
 
 ## Star History
 
-<iframe style="width:100%;height:auto;min-width:600px;min-height:400px;" src="https://www.star-history.com/embed?secret=Z2hwXzRxNEd3Y3o1U09wM1U4dEJxa3BCTlh2RWtZNUdFVDB5WFNQSg==#spectre-pro/gemini-vpn&Date" frameBorder="0"></iframe>
+<a href="https://www.star-history.com/#spectre-pro/gemini-vpn&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
+ </picture>
+</a>
