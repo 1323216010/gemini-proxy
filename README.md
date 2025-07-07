@@ -124,3 +124,13 @@ The proxy will forward this request to `https://generativelanguage.googleapis.co
 ## License
 
 This project is licensed under the [LICENSE](LICENSE) file.
+
+## Star History
+
+<a href="https://www.star-history.com/#spectre-pro/gemini-vpn&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
+ </picture>
+</a>
