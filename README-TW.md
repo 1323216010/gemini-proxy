@@ -22,13 +22,13 @@ You can see [claw cloud setting](https://github.com/spectre-pro/gemini-vpn?tab=r
 您可以從 Docker Hub 拉取預建的 Docker 映像：
 
 ```bash
-docker pull spectrpro/gemini-vpn
+docker pull ghcr.io/spectre-pro/gemini-vpn
 ```
 
 拉取後，您可以運行代理伺服器：
 
 ```bash
-docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
+docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
 ```
 
 代理伺服器將在 `http://localhost:34562` 上可訪問。
@@ -44,11 +44,11 @@ docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
     ```
 2.  **建置 Docker 映像：**
     ```bash
-    docker build -t spectrpro/gemini-vpn .
+    docker build -t ghcr.io/spectre-pro/gemini-vpn .
     ```
 3.  **運行 Docker 容器：**
     ```bash
-    docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
+    docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
     ```
 
 ### 本地運行 (Node.js)

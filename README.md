@@ -23,13 +23,13 @@ You can see [claw cloud setting](https://github.com/spectre-pro/gemini-vpn?tab=r
 You can pull the pre-built Docker image from Docker Hub:
 
 ```bash
-docker pull spectrpro/gemini-vpn
+docker pull ghcr.io/spectre-pro/gemini-vpn
 ```
 
 After pulling, you can run the proxy server:
 
 ```bash
-docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
+docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
 ```
 
 The proxy will be accessible at `http://localhost:34562`.
@@ -45,11 +45,11 @@ If you prefer to build the Docker image yourself:
     ```
 2.  **Build the Docker image:**
     ```bash
-    docker build -t spectrpro/gemini-vpn .
+    docker build -t ghcr.io/spectre-pro/gemini-vpn .
     ```
 3.  **Run the Docker container:**
     ```bash
-    docker run -d -p 34562:34562 --name gemini-vpn spectrpro/gemini-vpn
+    docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
     ```
 
 ### Running Locally (Node.js)
