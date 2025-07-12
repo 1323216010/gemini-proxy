@@ -18,14 +18,11 @@ app.all('*', async (req, res) => {
     const headers = { ...req.headers };
     // `host` 頭部會由 fetch 根據 targetUrl 自動產生，所以我們刪除原始的 host
     delete headers.host;
-    // 這些是「逐跳」頭部，不應該被轉發
-    delete headers['connection'];
-    delete headers['content-length'];
-    delete headers['transfer-encoding'];
 
     const fetchOptions = {
       method: req.method,
       headers,
+      compress: false,
     };
  
     // 如果請求方法不是 GET 或 HEAD，我們將請求體（作為一個流）直接傳遞給 fetch
@@ -41,17 +38,8 @@ app.all('*', async (req, res) => {
     res.status(apiResponse.status);
     // 複製並過濾目標 API 的回應頭部
     apiResponse.headers.forEach((value, key) => {
-      // 避免轉發可能引起問題的頭部
-      const excludedHeaders = [
-        'content-encoding', 
-        'transfer-encoding', 
-        'connection', 
-        'strict-transport-security', 
-        'content-length'
-      ];
-      if (!excludedHeaders.includes(key.toLowerCase())) {
-        res.setHeader(key, value);
-      }
+      // 不排除任何頭部，全部轉發
+      res.setHeader(key, value);
     });
 
     if (apiResponse.body) {
