@@ -25,13 +25,12 @@ app.all('*', async (req, res) => {
     const fetchOptions = {
       method: req.method,
       headers,
-      // 當使用流作為請求體時，Node.js 的 fetch 需要這個選項
-      duplex: 'half',
     };
-
+ 
     // 如果請求方法不是 GET 或 HEAD，我們將請求體（作為一個流）直接傳遞給 fetch
     if (req.method !== 'GET' && req.method !== 'HEAD') {
-      fetchOptions.body = req; // `req` 本身就是一個可讀流
+      fetchOptions.body = Readable.toWeb(req); // change the 'fetchOptions.body = req; // `req` 本身就是一個可讀流' (將 Node.js 的 req 流轉換為 fetch 相容的 Web Stream，以解決 TypeError)
+      fetchOptions.duplex = 'half';
     }
 
     // 發起請求到目標 API
