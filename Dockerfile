@@ -1,3 +1,5 @@
+# 使用 Node.js 的長期支援 (LTS) 版本作為基礎映像
+# alpine 版本更小巧，適合生產部署
 FROM node:lts-alpine
 
 # 設定工作目錄
