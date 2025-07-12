@@ -8,10 +8,10 @@ const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
 
 // 啟用 Express 的 JSON 體解析器，這樣才能正確解析傳入的 JSON 請求體
 // 這裡也包括了 urlencoded 以確保能處理不同的內容類型
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.text()); // 用於處理純文本請求體
-app.use(express.raw()); // 用於處理原始二進制請求體 (例如，應用程式/八位位元組流)
+app.use(express.json({ limit: '1048576mb' })); // 將 JSON 請求體限制提高到 1TB
+app.use(express.urlencoded({ limit: '1048576mb', extended: true })); // 將 URL-encoded 請求體限制提高到 1TB
+app.use(express.text({ limit: '1048576mb' })); // 將純文本請求體限制提高到 1TB
+app.use(express.raw({ limit: '1048576mb' })); // 將原始二進制請求體限制提高到 1TB
 
 // 處理所有 HTTP 方法和所有路徑的請求
 app.all('*', async (req, res) => {
