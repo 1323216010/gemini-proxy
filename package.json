@@ -1,5 +1,5 @@
 {
-  "name": "gemini-vpn",
+  "name": "gemini-proxy",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/spectre-pro/gemini-vpn.git"
+    "url": "git+https://github.com/spectre-pro/gemini-proxy.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/spectre-pro/gemini-vpn/issues"
+    "url": "https://github.com/spectre-pro/gemini-proxy/issues"
   },
-  "homepage": "https://github.com/spectre-pro/gemini-vpn#readme",
+  "homepage": "https://github.com/spectre-pro/gemini-proxy#readme",
   "dependencies": {
     "express": "^4.21.2"
   }

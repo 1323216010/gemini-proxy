@@ -18,18 +18,18 @@ This project provides a simple Node.js proxy server for the Google Generative La
 
 You can use the [claw cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S) to run
 
-You can see [claw cloud setting](https://github.com/spectre-pro/gemini-vpn?tab=readme-ov-file#claw-cloud-setting)
+You can see [claw cloud setting](https://github.com/spectre-pro/gemini-proxy?tab=readme-ov-file#claw-cloud-setting)
 
 You can pull the pre-built Docker image from Docker Hub:
 
 ```bash
-docker pull ghcr.io/spectre-pro/gemini-vpn
+docker pull ghcr.io/spectre-pro/gemini-proxy
 ```
 
 After pulling, you can run the proxy server:
 
 ```bash
-docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
+docker run -d -p 34562:34562 --name gemini-proxy ghcr.io/spectre-pro/gemini-proxy
 ```
 
 The proxy will be accessible at `http://localhost:34562`.
@@ -40,24 +40,24 @@ If you prefer to build the Docker image yourself:
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/spectre-pro/gemini-vpn.git
-    cd gemini-vpn
+    git clone https://github.com/spectre-pro/gemini-proxy.git
+    cd gemini-proxy
     ```
 2.  **Build the Docker image:**
     ```bash
-    docker build -t ghcr.io/spectre-pro/gemini-vpn .
+    docker build -t ghcr.io/spectre-pro/gemini-proxy .
     ```
 3.  **Run the Docker container:**
     ```bash
-    docker run -d -p 34562:34562 --name gemini-vpn ghcr.io/spectre-pro/gemini-vpn
+    docker run -d -p 34562:34562 --name gemini-proxy ghcr.io/spectre-pro/gemini-proxy
     ```
 
 ### Running Locally (Node.js)
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/spectre-pro/gemini-vpn.git
-    cd gemini-vpn
+    git clone https://github.com/spectre-pro/gemini-proxy.git
+    cd gemini-proxy
     ```
 2.  **Install dependencies:**
     ```bash
@@ -128,7 +128,7 @@ This project is licensed under the [LICENSE](LICENSE) file.
 
 
 <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date&theme=dark" />
-    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=spectre-pro/gemini-vpn&type=Date" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-proxy&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=spectre-pro/gemini-proxy&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=spectre-pro/gemini-proxy&type=Date" />
 </picture>
