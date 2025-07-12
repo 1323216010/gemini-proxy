@@ -1,6 +1,9 @@
 // src/main.js
 import express from 'express';
-import { Readable } from 'stream';
+import { Readable, pipeline } from 'stream'; // 變更 (直接從 'stream' 導入 pipeline)
+import { promisify } from 'util'; // 變更 (導入 util.promisify)
+
+const streamPipeline = promisify(pipeline);
 
 const app = express();
 const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
@@ -55,7 +58,7 @@ app.all('*', async (req, res) => {
 
     // 將目標 API 的回應流式傳輸回客戶端
     if (apiResponse.body) {
-      Readable.fromWeb(apiResponse.body).pipe(res);
+      await streamPipeline(Readable.fromWeb(apiResponse.body), res);
     } else {
       // 如果沒有回應主體，則直接結束回應
       res.end();
