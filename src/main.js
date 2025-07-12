@@ -1,9 +1,7 @@
 // src/main.js
 import express from 'express';
-import { Readable, pipeline } from 'stream'; // 變更 (直接從 'stream' 導入 pipeline)
-import { promisify } from 'util'; // 變更 (導入 util.promisify)
-
-const streamPipeline = promisify(pipeline);
+import { Readable } from 'stream';
+import { pipeline as streamPipeline } from 'stream/promises';
 
 const app = express();
 const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
@@ -56,7 +54,6 @@ app.all('*', async (req, res) => {
       }
     });
 
-    // 將目標 API 的回應流式傳輸回客戶端
     if (apiResponse.body) {
       await streamPipeline(Readable.fromWeb(apiResponse.body), res);
     } else {
@@ -67,7 +64,13 @@ app.all('*', async (req, res) => {
   } catch (error) {
     console.error(`代理請求時出錯: ${req.method} ${req.originalUrl}`, error);
     // 對於代理錯誤，502 Bad Gateway 是比 500 更合適的狀態碼
-    res.status(502).send('代理請求失敗');
+    if (!res.headersSent) {
+      res.status(502).send('代理請求失敗');
+    } else {
+      // 如果標頭已發送，我們無法再發送新的 HTTP 回應。
+      // 我們能做的就是結束連線。
+      res.end();
+    }
   }
 });
 
