@@ -118,8 +118,7 @@ The proxy will forward this request to `https://generativelanguage.googleapis.co
 
 ### Claw cloud setting
 
-![螢幕擷取畫面 2025-07-06 132407](https://github.com/user-attachments/assets/fdf04240-cb28-45bb-afae-cbbac93eaaee)
-
+<img width="541" height="852" alt="螢幕擷取畫面 2025-07-12 185901" src="https://github.com/user-attachments/assets/391bd8ec-38d4-43aa-aab5-1cacbbcfe364" />
 
 ## License
 
