@@ -1,6 +1,6 @@
 // src/main.js
 import express from 'express';
-import { Readable } from 'stream';
+import { Readable, PassThrough } from 'stream';
 import { pipeline as streamPipeline } from 'stream/promises';
 
 const app = express();
@@ -30,7 +30,9 @@ app.all('*', async (req, res) => {
  
     // 如果請求方法不是 GET 或 HEAD，我們將請求體（作為一個流）直接傳遞給 fetch
     if (req.method !== 'GET' && req.method !== 'HEAD') {
-      fetchOptions.body = Readable.toWeb(req); // change the 'fetchOptions.body = req; // `req` 本身就是一個可讀流' (將 Node.js 的 req 流轉換為 fetch 相容的 Web Stream，以解決 TypeError)
+      const requestBodyStream = new PassThrough(); // 創建一個 PassThrough 流來中繼傳入的請求體。
+      req.pipe(requestBodyStream); // 將 Express 請求流（req）導向 PassThrough 流。這有助於在 fetch 開始讀取之前穩定請求流的狀態。
+      fetchOptions.body = requestBodyStream; // 使用 PassThrough 流作為 fetch 的請求體，它可以更穩定地處理 Node.js 的請求流。
       fetchOptions.duplex = 'half';
     }
 
