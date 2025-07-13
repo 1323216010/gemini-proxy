@@ -5,7 +5,7 @@ import { Readable } from 'stream';
 // --- 配置 ---
 const app = express();
 const PORT = process.env.PORT || 34562;
-const TARGET_API_URL = 'https://openrouter.ai/api/v1';
+const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
 const TARGET_HOSTNAME = new URL(TARGET_API_URL).hostname;
 const TARGET_ORIGIN = new URL(TARGET_API_URL).origin;
 
