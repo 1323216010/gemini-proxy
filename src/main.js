@@ -54,6 +54,15 @@ app.all('*', async (req, res) => {
       }
     });
 
+    if (req.url.includes(':streamGenerateContent')) {
+      const originalContentType = apiResponse.headers.get('content-type');
+      if (originalContentType && originalContentType.includes('application/json')) {
+        res.setHeader('Content-Type', 'text/event-stream'); // add the new code (為 Gemini 等 AI 模型的回應明確設置 Content-Type，以幫助客戶端識別為流式事件。)
+      }
+      res.setHeader('Cache-Control', 'no-cache'); // add the new code (禁用緩存，確保流式數據即時傳輸到客戶端。)
+      res.setHeader('Connection', 'keep-alive'); // add the new code (保持 HTTP 連接活躍，這對於流式傳輸至關重要，可避免連接過早關閉。)
+    }
+
     if (apiResponse.body) {
       await streamPipeline(Readable.fromWeb(apiResponse.body), res);
     } else {
