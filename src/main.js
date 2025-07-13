@@ -1,63 +1,92 @@
 // src/main.js
 import express from 'express';
-import axios from 'axios';
-
-const PORT = process.env.PORT || 34562; 
-const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
+import { Readable, PassThrough } from 'stream';
+import { pipeline as streamPipeline } from 'stream/promises';
 
 const app = express();
+const PORT = process.env.PORT || 34562; // 代理伺服器監聽的埠號
+const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
 
+app.all('*', async (req, res) => {
+  // 使用 URL 建構函式來安全地組合目標 URL，它會自動處理路徑和查詢參數
+  const targetUrl = new URL(req.url, TARGET_API_URL);
 
-app.all('*', (req, res) => {
-    // 組合目標 URL
-    const targetUrl = TARGET_API_URL + req.originalUrl;
+  console.log(`代理請求: ${req.method} ${req.originalUrl} -> ${targetUrl.href}`);
 
-    console.log(`代理請求至: ${req.method} ${targetUrl}`);
-
-    // 複製請求標頭，並修正 host 標頭
-    // 'host' 標頭需要指向目標伺服器，而不是代理伺服器本身
+  try {
+    // 複製並清理要轉發的請求頭部
     const headers = { ...req.headers };
-    headers.host = new URL(TARGET_API_URL).host;
-    
-    // 使用 axios 發送請求
-    // 關鍵在於使用串流 (stream) 來處理請求和回應
-    axios({
-        method: req.method,
-        url: targetUrl,
-        headers: headers,
-        data: req, // 將收到的請求串流直接轉發出去
-        responseType: 'stream' // 告訴 axios 將回應也以串流形式返回
-    })
-    .then(response => {
-        // 成功收到目標伺服器的回應
-        // 將目標伺服器返回的狀態碼和標頭設定到我們的回應中
-        res.status(response.status).set(response.headers);
-        // 將目標伺服器返回的回應串流直接 pipe (對接) 到我們的回應中
-        // 這樣可以高效地傳輸數據，無論大小
-        response.data.pipe(res);
-    })
-    .catch(error => {
-        // 發生錯誤（例如網路問題或目標伺服器返回錯誤狀態碼）
-        if (error.response) {
-            // 如果錯誤中包含 response，表示目標伺服器有回應，只是狀態碼是錯誤的 (如 404, 500)
-            console.error('目標 API 錯誤:', error.response.status, error.response.statusText);
-            // 同樣地，將目標伺服器返回的錯誤狀態碼和標頭設定到我們的回應中
-            res.status(error.response.status).set(error.response.headers);
-            // 將錯誤回應的內容也 pipe 回去
-            error.response.data.pipe(res);
-        } else if (error.request) {
-            // 請求已發出，但沒有收到回應 (例如目標伺服器無回應或網路不通)
-            console.error('無回應:', error.message);
-            res.status(502).send('Bad Gateway'); // 502 Bad Gateway 是代理伺服器常用的錯誤碼
-        } else {
-            // 其他設定請求時發生的錯誤
-            console.error('代理設定錯誤:', error.message);
-            res.status(500).send('Internal Server Error');
-        }
+    // `host` 頭部會由 fetch 根據 targetUrl 自動產生，所以我們刪除原始的 host
+    delete headers.host;
+    // 這些是「逐跳」頭部，不應該被轉發
+    delete headers['connection'];
+    delete headers['content-length'];
+    delete headers['transfer-encoding'];
+
+    const fetchOptions = {
+      method: req.method,
+      headers,
+    };
+ 
+    // 如果請求方法不是 GET 或 HEAD，我們將請求體（作為一個流）直接傳遞給 fetch
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      const requestBodyStream = new PassThrough(); // 創建一個 PassThrough 流來中繼傳入的請求體。
+      req.pipe(requestBodyStream); // 將 Express 請求流（req）導向 PassThrough 流。這有助於在 fetch 開始讀取之前穩定請求流的狀態。
+      fetchOptions.body = requestBodyStream; // 使用 PassThrough 流作為 fetch 的請求體，它可以更穩定地處理 Node.js 的請求流。
+      fetchOptions.duplex = 'half';
+    }
+
+    // 發起請求到目標 API
+    const apiResponse = await fetch(targetUrl, fetchOptions);
+
+    // 將目標 API 的回應狀態碼傳回給客戶端
+    res.status(apiResponse.status);
+    // 複製並過濾目標 API 的回應頭部
+    apiResponse.headers.forEach((value, key) => {
+      // 避免轉發可能引起問題的頭部
+      const excludedHeaders = [
+        'content-encoding', 
+        'transfer-encoding', 
+        'connection', 
+        'strict-transport-security', 
+        'content-length'
+      ];
+      if (!excludedHeaders.includes(key.toLowerCase())) {
+        res.setHeader(key, value);
+      }
     });
+
+    if (req.url.includes(':streamGenerateContent')) {
+      const originalContentType = apiResponse.headers.get('content-type');
+      if (originalContentType && originalContentType.includes('application/json')) {
+        res.setHeader('Content-Type', 'text/event-stream'); // add the new code (為 Gemini 等 AI 模型的回應明確設置 Content-Type，以幫助客戶端識別為流式事件。)
+      }
+      res.setHeader('Cache-Control', 'no-cache'); // add the new code (禁用緩存，確保流式數據即時傳輸到客戶端。)
+      res.setHeader('Connection', 'keep-alive'); // add the new code (保持 HTTP 連接活躍，這對於流式傳輸至關重要，可避免連接過早關閉。)
+    }
+
+    if (apiResponse.body) {
+      await streamPipeline(Readable.fromWeb(apiResponse.body), res);
+    } else {
+      // 如果沒有回應主體，則直接結束回應
+      res.end();
+    }
+
+  } catch (error) {
+    console.error(`代理請求時出錯: ${req.method} ${req.originalUrl}`, error);
+    // 對於代理錯誤，502 Bad Gateway 是比 500 更合適的狀態碼
+    if (!res.headersSent) {
+      res.status(502).send('代理請求失敗');
+    } else {
+      // 如果標頭已發送，我們無法再發送新的 HTTP 回應。
+      // 我們能做的就是結束連線。
+      res.end();
+    }
+  }
 });
 
+// 啟動伺服器
 app.listen(PORT, () => {
-    console.log(`API 代理伺服器已啟動，監聽端口 ${PORT}`);
-    console.log(`代理目標: ${TARGET_API_URL}`);
+  console.log(`API 代理伺服器在 http://localhost:${PORT} 上運行`);
+  console.log(`所有請求將被轉發到: ${TARGET_API_URL}`);
 });
