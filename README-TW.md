@@ -68,20 +68,11 @@ docker run -d -p 34562:34562 --name gemini-proxy ghcr.io/spectre-pro/gemini-prox
     ```
     伺服器將預設在 `http://localhost:34562` 上運行。
 
-## 配置
-
-代理伺服器可以使用環境變數進行配置：
-
-*   `PORT`: 代理伺服器將監聽的埠號。預設為 `34562`。
-    *   範例：`PORT=8080 node src/main.js`
-*   `TARGET_API_URL`: 目標 API 的基本 URL。預設為 `https://generativelanguage.googleapis.com`。
-    *   範例：`TARGET_API_URL=https://api.example.com node src/main.js`
-
 ## 使用範例
 
 代理伺服器運行後，您可以將 Gemini API 請求導向 `http://localhost:34562`，而不是 `https://generativelanguage.googleapis.com`。
 
-例如，如果您通常會發出這樣的請求：
+例如，OpenAI格式：
 
 ```
 POST https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
@@ -97,7 +88,7 @@ Content-Type: application/json
 }
 ```
 
-您現在將其發送到您的代理：
+Gemini格式：
 
 ```
 POST http://localhost:34562/v1beta/models/gemini-pro:generateContent

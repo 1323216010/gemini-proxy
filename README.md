@@ -69,20 +69,11 @@ If you prefer to build the Docker image yourself:
     ```
     The server will run on `http://localhost:34562` by default.
 
-## Configuration
-
-The proxy server can be configured using environment variables:
-
-*   `PORT`: The port on which the proxy server will listen. Defaults to `34562`.
-    *   Example: `PORT=8080 node src/main.js`
-*   `TARGET_API_URL`: The base URL of the target API. Defaults to `https://generativelanguage.googleapis.com`.
-    *   Example: `TARGET_API_URL=https://api.example.com node src/main.js`
-
 ## Usage Example
 
 Once the proxy is running, you can direct your Gemini API requests to `http://localhost:34562` instead of `https://generativelanguage.googleapis.com`.
 
-For example, if you would normally make a request like this:
+For example, OpenAI format:
 
 ```
 POST https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent
@@ -98,7 +89,7 @@ Content-Type: application/json
 }
 ```
 
-You would now make it to your proxy:
+Gemini format:
 
 ```
 POST http://localhost:34562/v1beta/models/gemini-pro:generateContent
