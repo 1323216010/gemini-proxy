@@ -9,6 +9,9 @@ const TARGET_HOSTNAME = new URL(TARGET_API_URL).hostname;
 const TARGET_ORIGIN = new URL(TARGET_API_URL).origin;
 
 app.all('*', async (req, res) => {
+  if (req.url === '/') { // (新增對根路徑的判斷)
+    return res.send('proxy is running, you can see more at https://github.com/spectre-pro/gemini-proxy'); // (如果是根路徑，返回指定訊息並結束請求)
+  } 
   const targetUrl = `${TARGET_API_URL}${req.url}`;
   console.log(`代理請求: ${req.method} ${req.url} -> ${targetUrl}`);
 
