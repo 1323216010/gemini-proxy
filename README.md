@@ -14,8 +14,7 @@
 
 ## 快速開始
 
-[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?
-repository-url=https://github.com/spectre-pro/gemini-proxy)
+[![Deploy to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/spectre-pro/gemini-proxy)
 
 ### 使用 Docker (推薦)
 
