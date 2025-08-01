@@ -24,7 +24,7 @@
 
 ### Docker
 
-您也可以使用 Docker 在任何支援的平台上進行部署，例如 Claw Cloud。
+您也可以使用 Docker 在任何支援的平台上進行部署，例如 [Claw Cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S)。
 
 ```
 docker run -d \
@@ -34,7 +34,7 @@ docker run -d \
   ghcr.io/spectre-pro/gemini-proxy
 ```
 
-3.  您的代理伺服器將在 `http://localhost:34562` 上運行。
+3.  您的代理伺服器將在 `http://localhost:80` 上運行。
 
 ## Star History
 
