@@ -24,7 +24,7 @@ We highly recommend using Vercel for a quick and easy one-click deployment.
 
 ### Docker
 
-You can also use Docker to deploy on any supported platform, such as Claw Cloud.
+You can also use Docker to deploy on any supported platform, such as [Claw Cloud](https://console.run.claw.cloud/signin?link=RGXA3AIOBR4S).
 
 ```
 docker run -d \
