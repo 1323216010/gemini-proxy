@@ -34,8 +34,7 @@ docker run -d \
   ghcr.io/spectre-pro/gemini-proxy
 ```
 
-3.  Your proxy server will be running at `http://localhost:34562`.
-
+3.  Your proxy server will be running at `http://localhost:80`.  
 ## Star History
 
 <picture>
