@@ -1,7 +1,7 @@
 # Gemini API Proxy
 [中文](README-TW.md)
 
-This is a proxy server designed specifically for the Google Gemini API. It allows you to securely consolidate multiple API keys into a single endpoint and randomly select one for use with each request. This is useful for managing keys, load balancing, and integrating with front-end applications without exposing your keys.
+This is a proxy server designed specifically for the Google Gemini API. It allows you to securely consolidate multiple API keys into a single endpoint and randomly select one for use with each request. This is useful for managing keys, load balancing, and integrating with front-end applications.
 
 ## ✨ Features
 
