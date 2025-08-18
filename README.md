@@ -28,7 +28,7 @@ You can also use Docker to deploy on any supported platform, such as [Claw Cloud
 
 ```
 docker run -d \
-  -p 80:34562 \
+  -p 80:80 \
   --name gemini-proxy \
   --restart unless-stopped \
   ghcr.io/spectre-pro/gemini-proxy

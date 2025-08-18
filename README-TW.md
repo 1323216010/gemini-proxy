@@ -28,7 +28,7 @@
 
 ```
 docker run -d \
-  -p 80:34562 \
+  -p 80:80 \
   --name gemini-proxy \
   --restart unless-stopped \
   ghcr.io/spectre-pro/gemini-proxy

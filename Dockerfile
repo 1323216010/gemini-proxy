@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # 暴露應用程式運行的埠號
-EXPOSE 34562
+EXPOSE 80
 
 # 定義啟動應用程式的命令
 CMD ["node", "src/main.js"]
