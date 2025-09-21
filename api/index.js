@@ -4,7 +4,7 @@ import { Readable } from 'stream';
 
 const app = express();
 
-const TARGET_API_URL = 'https://generativelanguage.googleapis.com';
+const TARGET_API_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
 const TARGET_HOSTNAME = new URL(TARGET_API_URL).hostname;
 const TARGET_ORIGIN = new URL(TARGET_API_URL).origin;
 
