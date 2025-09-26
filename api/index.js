@@ -10,7 +10,7 @@ const TARGET_ORIGIN = new URL(TARGET_API_URL).origin;
 
 app.all('*', async (req, res) => {
   if (req.url === '/') { // (新增對根路徑的判斷)
-    return res.send('proxy is running); // (如果是根路徑，返回指定訊息並結束請求)
+    return res.send('proxy is running'); // (如果是根路徑，返回指定訊息並結束請求)
   } 
   const targetUrl = `${TARGET_API_URL}${req.url}`;
   
